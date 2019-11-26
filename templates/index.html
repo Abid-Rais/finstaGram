@@ -3,28 +3,74 @@
     <head>
         <title>finstaGram</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     </head>
 
     <body>
-        <div id="container">
+        <body id="container">
             <div id="header">
-                <h1>Welcome</h1>
-            </div>
-            <div id = "content">
-                <div id = "login">
-                    <h3>Returning User? <br></h3>
-                    <a href="/login">Login</a>
+                    <h1>Welcome Bitches</h1>
                 </div>
-                <div id = "register">
-                    <h3>New User? <br></h3>
-                    <a href="/register">Register</a>
+            <div id="content">
+                <div class="w3-container">
+                    <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-black">Register</button>
+
+                    <div id="id01" class="w3-modal">
+                        <div class="w3-modal-content w3-card-4">
+                            <header class="w3-container w3-teal">
+                                <span onclick="document.getElementById('id01').style.display='none'"
+                                      class="w3-button w3-display-topright">&times;</span>
+                                <h2>Register</h2>
+                                <h3>Register now to be connected to millions of users worldwide!</h3>
+                            </header>
+                            <div class="w3-container">
+                                <form action="/registerAuth" method="POST">
+                                    <input type="text" name = "username" placeholder="Username" required/> </br>
+                                    <input type="password" name = "password" placeholder="Password" required/> </br>
+                                    <input type="text" name = "firstName" placeholder="First Name" required/> </br>
+                                    <input type="text" name = "lastName" placeholder="Last Name" required/> </br>
+                                    <input type="text" name = "bio" placeholder="Bio" required≈/> </br>
+                                    <input type="submit" value = Register />
+                                    {% if error %}
+                                        <p class="error"><strong>Error:</strong> {{error}}</p>
+                                    {% endif %}
+                                </form>
+                                <a href="/">Go back</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="w3-container">
+                    <button onclick="document.getElementById('id02').style.display='block'" class="w3-button w3-black">Login</button>
+
+                    <div id="id02" class="w3-modal">
+                        <div class="w3-modal-content w3-card-4">
+                            <header class="w3-container w3-teal">
+                                <span onclick="document.getElementById('id02').style.display='none'"
+                                      class="w3-button w3-display-topright">&times;</span>
+                                <h2>Login</h2>
+                            </header>
+                            <div class="w3-container">
+                                <form action="/loginAuth" method="POST">
+                                    <input type="text" name = "username" placeholder="username" required/> </br>
+                                    <input type="password" name = "password" placeholder="password" required/></br>
+                                    <input type="submit" value = Login />
+                                    {% if error %}
+                                        <p class="error"><strong>Error:</strong> {{error}}</p>
+                                    {% endif %}
+                                </form>
+                                <a href="/">Go back</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <footer id = "footer">
-                Copyright &copy; 2019 Abid Rais.
-            </footer>
-        </div>
-
+                    Copyright &copy; 2019 Abid Rais.
+                </footer>
+        </body>
     </body>
 
     </html>

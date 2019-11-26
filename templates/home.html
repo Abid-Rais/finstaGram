@@ -1,12 +1,39 @@
 <html>
 <head>
+    <title>Homepage</title>
 </head>
 <body>
-<form action="/post" method="POST">
-	<h1>Welcome {{username}}</h1>
-	<input type="text" name = "blog" placeholder="post" required/> </br>
-	<input type="submit" value = Post />
-</form>
+    <div id="container">
+        <div id="header">
+            <h1>Welcome {{username}}</h1>
+
+        </div>
+        <div id="content">
+            <div id="nav">
+            <ul>
+                <li>Post a Photo</li>
+                <li>Select User</li>
+                <li>Edit Friend Group</li>
+                <li>Manage Follows</li>
+                <li><a href="/logout">Logout</a></li>
+                <li>Under Construction</li>
+            </ul>
+            </div>
+            <div id="main">
+
+
+            </div>
+
+        </div>
+        <div id="footer">
+
+
+        </div>
+
+
+
+    </div>
+
 
 <style type="text/css">
 	table, th, td{

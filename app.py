@@ -34,7 +34,7 @@ def loginAuth():
     hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
     cursor = conn.cursor()
-    query = 'SELECT * FROM user WHERE username = %s and password = %s'
+    query = 'SELECT * FROM Person WHERE username = %s and password = %s'
     cursor.execute(query, (username, password))
     data = cursor.fetchone()
     cursor.close()
@@ -44,24 +44,27 @@ def loginAuth():
         return redirect(url_for('home'))
     else:
         error = 'Invalid login or username'
-        return render_template('login.html', error=error)
+        return render_template('index.html', error=error)
 
 @app.route('/registerAuth', methods=['GET', 'POST'])
 def registerAuth():
     username = request.form['username']
     password = request.form['password']
+    firstName = request.form['firstName']
+    lastName = request.form['lastName']
+    bio = request.form['bio']
 
     cursor = conn.cursor()
-    query = 'SELECT * FROM user WHERE username = %s'
-    cursor.execute(query, (username))
+    query = 'SELECT * FROM Person WHERE username = %s'
+    cursor.execute(query, username)
     data = cursor.fetchone()
     error = None
     if(data):
         error = "This user already exists"
-        return render_template('register.html', error = error)
+        return render_template('index.html', error = error)
     else:
-        ins = 'INSERT INTO user VALUES(%s, %s)'
-        cursor.execute(ins, (username, password))
+        ins = 'INSERT INTO Person VALUES(%s, %s, %s, %s, %s)'
+        cursor.execute(ins, (username, password, firstName, lastName, bio))
         conn.commit()
         cursor.close()
         return render_template('index.html')
@@ -71,7 +74,7 @@ def registerAuth():
 def home():
     user = session['username']
     cursor = conn.cursor();
-    query = 'SELECT ts, blog_post FROM blog WHERE username = %s ORDER BY ts DESC'
+    query = 'SELECT photoPoster, postingdate, caption FROM Photo WHERE photoPoster = %s ORDER BY postingDate DESC'
     cursor.execute(query, (user))
     data = cursor.fetchall()
     cursor.close()
@@ -93,6 +96,12 @@ def post():
     conn.commit()
     cursor.close()
     return redirect(url_for('home'))
+
+@app.route('/friend_groups')
+def friend_groups():
+    cursor = conn.cursor();
+
+
 
 @app.route('/select_blogger')
 def select_blogger():
