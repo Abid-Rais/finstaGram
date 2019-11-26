@@ -1,0 +1,51 @@
+body {
+    background-color: #EEE;
+    font-family: Helvetica, Arial, sans-serif
+}
+
+#container {
+    background-color: white;
+    width: 800px;
+    height: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#header {
+    background-color: #66CCFF;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border: 6px double #1C6EA4;
+}
+
+#content {
+    padding: 10px;
+    color: blue;
+    text-align: center;
+}
+
+#login {
+    width: 390px;
+    color: pink
+    text-align: center;
+    float: left;
+}
+
+#register {
+    width: 390px;
+    color: pink
+    text-align: center;
+    float: right;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 95%;
+    height: 2.5rem;
+    clear: both;
+    text-align: center;
+}
+
+
