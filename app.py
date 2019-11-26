@@ -3,7 +3,7 @@ import pymysql.cursors
 import hashlib
 import mysql.connector
 from mysql.connector import Error
-
+from datetime import date
 
 app = Flask(__name__)
 
@@ -80,22 +80,63 @@ def home():
     cursor.close()
     return render_template('home.html', username=user, posts=data)
 
-
 def convertToBinaryData(filename):
     with open(filename, 'rb') as file:
         binaryData = file.read()
     return binaryData
 
-@app.route('/post', methods=['GET', 'POST'])
-def post():
+def insertBlob(photoID, photoPoster, biodata, photo_src, allFollowers, caption):
+    try:
+        print("Inserting BLOB into photo table")
+        cursor = conn.cursor()
+        sql_insert_blob_query = """ INSERT INTO photo
+                            (photoID, photoPoster, postingdate, biodata, photo, allFollowers, caption) VALUES
+        (%s, %s, %s, %s)"""
+        photo = convertToBinaryData(photo_src)
+        file = convertToBinaryData(biodata)
+
+        insert_blob_tuple = (photoID, photoPoster, date.today(), file, photo, allFollowers, caption)
+        result = cursor.execute(sql_insert_blob_query, insert_blob_tuple)
+        connection.commit()
+        print("Image and file inserted successfully as a BLOB into photo table", result)
+    except mysql.connector.Error as error:
+        print("Failed inserting BLOB data into MySQL table {}".format(error))
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+
+@app.route('/post_photo', methods=['GET', 'POST'])
+def post_photo():
     username = session['username']
-    cursor = conn.cursor();
-    blog = request.form['blog']
-    query = 'INSERT INTO blog (blog_post, username) VALUES(%s, %s)'
-    cursor.execute(query, (blog, username))
-    conn.commit()
-    cursor.close()
+
+    photoID = request.form['photoID']
+    biodata = request.form['biodata']
+    photo_src = request.form['photo_src']
+    allFollowers = request.form['allFollowers']
+    caption = request.form['caption']
+
+    insertBlob(photoID, username, biodata, photo_src, allFollowers, caption)
+    # cursor = conn.cursor();
+    # blog = request.form['blog']
+    # query = 'INSERT INTO blog (blog_post, username) VALUES(%s, %s)'
+    # cursor.execute(query, (blog, username))
+    # conn.commit()
+    # cursor.close()
     return redirect(url_for('home'))
+
+def write_file(data, filename):
+    #Convert binary data to proper format and write it on Hard Disk
+    with open(filename, 'wb') as file:
+        file.write(data)
+
+def readBLOB():
+    print("Reading BLOB data from photo table")
+    try:
+        cursor = connection.cursor()
+        sql_fetch_blob_query = """SELECT photo from Photo WHERE photoPoster = %s"""
+        cursor.execute(sql_fetch_blob_query, )
 
 @app.route('/friend_groups')
 def friend_groups():
@@ -106,7 +147,7 @@ def friend_groups():
 @app.route('/select_blogger')
 def select_blogger():
     cursor = conn.cursor();
-    query = 'SELECT DISTINCT username FROM blog'
+    query = 'SELECT DISTINCT username FROM Person'
     cursor.execute(query)
     data = cursor.fetchall()
     cursor.close()
@@ -116,7 +157,7 @@ def select_blogger():
 def show_posts():
     poster = request.args['poster']
     cursor = conn.cursor();
-    query = 'SELECT ts, blog_post FROM blog WHERE username = %s ORDER BY ts DESC'
+    query = 'SELECT photoID, postingdate FROM photo WHERE photoPoster = %s ORDER BY postingdate DESC'
     cursor.execute(query, poster)
     data = cursor.fetchall()
     cursor.close()

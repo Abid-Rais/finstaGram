@@ -1,7 +1,11 @@
+<!DOCTYPE html>
 <html>
-<head>
-    <title>Homepage</title>
-</head>
+    <head>
+        <title>HomePage</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    </head>
+
 <body>
     <div id="container">
         <div id="header">
@@ -11,54 +15,38 @@
         <div id="content">
             <div id="nav">
             <ul>
-                <li>Post a Photo</li>
-                <li>Select User</li>
-                <li>Edit Friend Group</li>
-                <li>Manage Follows</li>
+                <li><a href="/post_photo">Post a Photo</a></li>
+                <li><a href="/select_blogger">Select a User</a></li>
+                <li>Under Construction: pView Friend Group</li>
+                <li>Under Construction: Manage Follows</li>
                 <li><a href="/logout">Logout</a></li>
-                <li>Under Construction</li>
             </ul>
             </div>
             <div id="main">
+                <style type="text/css">
+                        table, th, td{
+                        border: 1px solid black;
+                    }
+                </style>
 
+                Here are your posts:
 
+                <table>
+                    <th>Time</th>
+                    <th>Post</th>
+                {% for line in posts %}
+                    <tr>
+                        <td>{{line.ts}}</td>
+                        <td>{{line.blog_post}}</td>
+                    </tr>
+                {% endfor %}
+                </table>
             </div>
-
         </div>
         <div id="footer">
 
-
         </div>
-
-
-
     </div>
-
-
-<style type="text/css">
-	table, th, td{
-		border: 1px solid black;
-	}
-</style>
-
-Here are your posts:
-
-<table>
-	<th>Time</th>
-	<th>Post</th>
-
-{% for line in posts %}
-	<tr>
-		<td>{{line.ts}}</td>
-		<td>{{line.blog_post}}</td>
-	</tr>
-{% endfor %}
-</table>
-
-<a href="/select_blogger">Select a blogger</a>
-<br>
-<a href="/logout">Logout</a>
-
 </body>
 
 

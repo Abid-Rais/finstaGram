@@ -25,6 +25,14 @@ body {
     text-align: center;
 }
 
+#nav {
+    float: left;
+    padding: 10px;
+    text-align: center;
+
+}
+
+
 #login {
     width: 390px;
     color: pink
