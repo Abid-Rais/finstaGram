@@ -1,11 +1,14 @@
-from flask import Flask, render_template, request, session, url_for, redirect
+from flask import Flask, render_template, request, session, url_for, redirect, send_file
+import os
 import pymysql.cursors
 import hashlib
 import mysql.connector
 from mysql.connector import Error
-from datetime import date
+from datetime import date, time, datetime
 
 app = Flask(__name__)
+app.secret_key = 'some key that you will never guess'
+IMAGES_DIR = os.path.join(os.getcwd(), "images")
 
 conn = pymysql.connect(host='localhost',
                        port = 3306,
@@ -74,74 +77,41 @@ def registerAuth():
 def home():
     user = session['username']
     cursor = conn.cursor();
-    query = 'SELECT photoPoster, postingdate, caption FROM Photo WHERE photoPoster = %s ORDER BY postingDate DESC'
-    cursor.execute(query, (user))
+    query = 'SELECT * FROM Photo ORDER BY postingDate DESC'
+    cursor.execute(query)
     data = cursor.fetchall()
     cursor.close()
-    return render_template('home.html', username=user, posts=data)
+    return render_template('home.html', username=user, images=data)
 
-def convertToBinaryData(filename):
-    with open(filename, 'rb') as file:
-        binaryData = file.read()
-    return binaryData
+@app.route("/images/<image_name>", methods=["GET"])
+def image(image_name):
+    image_location = os.path.join(IMAGES_DIR, image_name)
+    if os.path.isfile(image_location):
+        return send_file(image_location, mimetype="image/jpg")
 
-def insertBlob(photoID, photoPoster, biodata, photo_src, allFollowers, caption):
-    try:
-        print("Inserting BLOB into photo table")
-        cursor = conn.cursor()
-        sql_insert_blob_query = """ INSERT INTO photo
-                            (photoID, photoPoster, postingdate, biodata, photo, allFollowers, caption) VALUES
-        (%s, %s, %s, %s)"""
-        photo = convertToBinaryData(photo_src)
-        file = convertToBinaryData(biodata)
+@app.route("/upload", methods=['GET'])
+def upload():
+    return render_template("upload.html")
 
-        insert_blob_tuple = (photoID, photoPoster, date.today(), file, photo, allFollowers, caption)
-        result = cursor.execute(sql_insert_blob_query, insert_blob_tuple)
-        connection.commit()
-        print("Image and file inserted successfully as a BLOB into photo table", result)
-    except mysql.connector.Error as error:
-        print("Failed inserting BLOB data into MySQL table {}".format(error))
-    finally:
-        if (connection.is_connected()):
+@app.route('/postPhoto', methods=['POST', 'GET'])
+def postPhoto():
+    if request.files and request.method =='POST':
+        image_file = request.files.get("imageToUpload", "")
+        image_name = image_file.filename
+        filepath = os.path.join(IMAGES_DIR, image_name)
+        image_file.save(filepath)
+
+        username = session['username']
+        caption = request.form['caption']
+
+        query = "INSERT INTO Photo (photoPoster, photoPath, postingdate, caption) VALUES (%s, %s, %s, %s)"
+        with conn.cursor() as cursor:
+            cursor.execute(query, (username, image_name, datetime.now(), caption))
+            conn.commit()
             cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
-
-@app.route('/post_photo', methods=['GET', 'POST'])
-def post_photo():
-    username = session['username']
-
-    photoID = request.form['photoID']
-    biodata = request.form['biodata']
-    photo_src = request.form['photo_src']
-    allFollowers = request.form['allFollowers']
-    caption = request.form['caption']
-
-    insertBlob(photoID, username, biodata, photo_src, allFollowers, caption)
-    # cursor = conn.cursor();
-    # blog = request.form['blog']
-    # query = 'INSERT INTO blog (blog_post, username) VALUES(%s, %s)'
-    # cursor.execute(query, (blog, username))
-    # conn.commit()
-    # cursor.close()
-    return redirect(url_for('home'))
-
-def write_file(data, filename):
-    #Convert binary data to proper format and write it on Hard Disk
-    with open(filename, 'wb') as file:
-        file.write(data)
-
-def readBLOB():
-    print("Reading BLOB data from photo table")
-    try:
-        cursor = connection.cursor()
-        sql_fetch_blob_query = """SELECT photo from Photo WHERE photoPoster = %s"""
-        cursor.execute(sql_fetch_blob_query, )
-
-@app.route('/friend_groups')
-def friend_groups():
-    cursor = conn.cursor();
-
+        message = "Image has been successfully uploaded."
+        return render_template("postPhoto.html", message=message)
+    return render_template("postPhoto.html")
 
 
 @app.route('/select_blogger')
@@ -168,12 +138,16 @@ def logout():
     session.pop('username')
     return redirect('/')
         
-app.secret_key = 'some key that you will never guess'
 #Run the app on localhost port 5000
 #debug = True -> you don't have to restart flask
 #for changes to go through, TURN OFF FOR PRODUCTION
+# if __name__ == "__main__":
+#     app.run('127.0.0.1', 5000, debug = True)
+
 if __name__ == "__main__":
-    app.run('127.0.0.1', 5000, debug = True)
+    if not os.path.isdir("images"):
+        os.mkdir(IMAGES_DIR)
+    app.run('127.0.0.1', 5000, debug=True)
 
 SALT = 'cs3083'
 

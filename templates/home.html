@@ -15,32 +15,25 @@
         <div id="content">
             <div id="nav">
             <ul>
-                <li><a href="/post_photo">Post a Photo</a></li>
+                <li><a href="/postPhoto">Post a Photo</a></li>
                 <li><a href="/select_blogger">Select a User</a></li>
-                <li>Under Construction: pView Friend Group</li>
-                <li>Under Construction: Manage Follows</li>
-                <li><a href="/logout">Logout</a></li>
+                <li>Friend Groups</li>
+                <li>Manage Follows</li>
+                <li style="float:right"><a class="active" href="/logout">Logout</a></li>
             </ul>
             </div>
+            <br>
+            <br>
+            <br>
             <div id="main">
-                <style type="text/css">
-                        table, th, td{
-                        border: 1px solid black;
-                    }
-                </style>
+                <h3>Newsfeed</h3>
+                <div>
+                    {% for image in images %}
 
-                Here are your posts:
-
-                <table>
-                    <th>Time</th>
-                    <th>Post</th>
-                {% for line in posts %}
-                    <tr>
-                        <td>{{line.ts}}</td>
-                        <td>{{line.blog_post}}</td>
-                    </tr>
-                {% endfor %}
-                </table>
+                    <img src="/images/{{image.photoPath}}" width="300"/><br>
+                    <br>
+                    {% endfor %}
+                </div>
             </div>
         </div>
         <div id="footer">
