@@ -23,14 +23,15 @@
             </ul>
             </div>
             <br>
-            <br>
-            <br>
             <div id="main">
-                <h3>Newsfeed</h3>
+                <h2>Newsfeed</h2>
                 <div>
                     {% for image in images %}
-
+                    User: {{image.photoPoster}}<br>
+                    Date: {{image.postingdate}}<br>
                     <img src="/images/{{image.photoPath}}" width="300"/><br>
+                    {{image.caption}}
+                    <br>
                     <br>
                     {% endfor %}
                 </div>

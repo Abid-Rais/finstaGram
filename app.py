@@ -137,12 +137,6 @@ def show_posts():
 def logout():
     session.pop('username')
     return redirect('/')
-        
-#Run the app on localhost port 5000
-#debug = True -> you don't have to restart flask
-#for changes to go through, TURN OFF FOR PRODUCTION
-# if __name__ == "__main__":
-#     app.run('127.0.0.1', 5000, debug = True)
 
 if __name__ == "__main__":
     if not os.path.isdir("images"):
