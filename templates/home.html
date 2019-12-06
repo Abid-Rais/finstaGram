@@ -3,43 +3,56 @@
     <head>
         <title>HomePage</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
 
-<body>
-    <div id="container">
-        <div id="header">
-            <h1>Welcome {{username}}</h1>
-
-        </div>
-        <div id="content">
-            <div id="nav">
-            <ul>
-                <li><a href="/postPhoto">Post a Photo</a></li>
-                <li><a href="/select_blogger">Select a User</a></li>
-                <li>Friend Groups</li>
-                <li>Manage Follows</li>
-                <li style="float:right"><a class="active" href="/logout">Logout</a></li>
-            </ul>
-            </div>
-            <br>
-            <div id="main">
-                <h2>Newsfeed</h2>
-                <div id="post">
-                    {% for image in images %}
-                    User: {{image.photoPoster}}<br>
-                    Date: {{image.postingdate}}<br>
-                    <img src="/images/{{image.photoPath}}" width="300"/><br>
-                    {{image.caption}}<br>
-                    <br>
-                    {% endfor %}
+    <body>
+        <div class="container">
+            <h1>Welcome Back {{username}}</h1>
+            <nav class="navbar sticky-top navbar-dark bg-dark">
+                <a class="navbar-brand" href="home.html">Navigation</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" 
+                    aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/postPhoto">Post a Photo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/select_blogger">Select a User</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Friend Groups</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Manage Follows</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Log Out</a>
+                        </li>
+                    </ul>
                 </div>
-            </div>
+            </nav>
+            <h2>Newsfeed</h2>
+            {% for image in images %}
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">{{username}}</div>
+                    <img class="card-img" src="/images/{{image.photoPath}}" alt="Card image cap">
+                    <div class="card-block">
+                        <p class="card-text">{{image.caption}}</p>
+                    </div>
+                    <div class="card-footer">{{image.postingdate}}</div>
+                </div>
+            {% endfor %}
         </div>
-        <div id="footer">
-
-        </div>
-    </div>
-</body>
-
-
+    </body>
 </html>
