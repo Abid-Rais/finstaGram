@@ -3,7 +3,6 @@
     <head>
         <title>HomePage</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     </head>
 
 <body>
@@ -25,13 +24,12 @@
             <br>
             <div id="main">
                 <h2>Newsfeed</h2>
-                <div>
+                <div id="post">
                     {% for image in images %}
                     User: {{image.photoPoster}}<br>
                     Date: {{image.postingdate}}<br>
                     <img src="/images/{{image.photoPath}}" width="300"/><br>
-                    {{image.caption}}
-                    <br>
+                    {{image.caption}}<br>
                     <br>
                     {% endfor %}
                 </div>
