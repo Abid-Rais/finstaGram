@@ -54,8 +54,16 @@
                     <div class="card-text text-right" style="margin-right: 5%;">{{image.postingdate}}</div>
                     <div class="card-group">
                         <div class="card">
-                            <div class="card-body" style="margin-top:10%; margin-left:25%">
+                            <div class="card-header text-center">
+                                {% if image.like %}
+                                    {{image.like}}
+                                {% else %}
+                                    0
+                                {% endif %}
+                                likes</div>
+                            <div class="card-body" style="margin-top:2%; margin-left:20%">
                                 <form action="/likePhoto"></form>
+                                <input type="hidden" id="photoID" name="photoID" value= {{image.photoID}} />
                                 <input type="checkbox" class="form-check-input" name="likeCheckbox" id="like" value="like_bool" >
                                 <input type="submit" class="btn btn-secondary" value="Like Photo" style="margin-left:20px;">
                             </div>

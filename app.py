@@ -113,10 +113,17 @@ def postPhoto():
         return render_template("postPhoto.html", message=message)
     return render_template("postPhoto.html")
 
+@app.route('/likePhoto')
+def likePhoto(): 
+    query = 'UPDATE Photo SET like = like + 1 WHERE photoID = %s'
+    with conn.cursor() as cursor: 
+        cursor.execute(query, photoID)
+        conn.commit()
+    return render_template('home.html', username=user, images=data)
 
-
-
-
+@app.route('/commentPhoto')
+def commentPhoto(): 
+    pass
 
 @app.route('/select_blogger')
 def select_blogger():
