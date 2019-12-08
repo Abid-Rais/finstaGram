@@ -46,15 +46,32 @@
             {% for image in images %}
             <div class="mx-auto" style="width: 600px;">
                 <div class="card card-block w-auto display-block border-dark mb-3">
-                    <div class="card-header"><h5>{{image.photoPoster}}</h5></div>
+                    <div class="card-header"><h3>{{image.photoPoster}}</h3></div>
                     <img class="card-img" src="/images/{{image.photoPath}}" alt="Card image cap">
                     <div class="card-block">
-                        <p class="card-text">{{image.caption}}</p>
+                        <p class="card-text" style="margin-left: 3%;">{{image.caption}}</p>
                     </div>
-                    <div class="card-footer text-right">{{image.postingdate}}</div>
+                    <div class="card-text text-right" style="margin-right: 5%;">{{image.postingdate}}</div>
+                    <div class="card-group">
+                        <div class="card">
+                            <div class="card-body" style="margin-top:10%; margin-left:25%">
+                                <form action="/likePhoto"></form>
+                                <input type="checkbox" class="form-check-input" name="likeCheckbox" id="like" value="like_bool" >
+                                <input type="submit" class="btn btn-secondary" value="Like Photo" style="margin-left:20px;">
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <form action="/commentPhoto"></form>
+                                <input type="text" class="form-control" name="comment" id="caption" placeholder="Comment">
+                            </br>
+                                <input type="submit" class="btn btn-secondary" value="Comment" style="margin-left:30%;">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-                
             {% endfor %}
         </div>
     </body>

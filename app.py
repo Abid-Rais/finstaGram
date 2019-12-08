@@ -113,12 +113,10 @@ def postPhoto():
         return render_template("postPhoto.html", message=message)
     return render_template("postPhoto.html")
 
-@app.route('/likePhoto', methods=['POST'])
-def likePhoto(): 
 
 
-@app.route('/commentPhoto', methods=['POST'])
-def commentPhoto(): 
+
+
 
 @app.route('/select_blogger')
 def select_blogger():
