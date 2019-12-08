@@ -11,10 +11,45 @@
     </head>
 
     <body>
+        <!-- <div class="mx-auto" style="width: 750px;"> 
+            <div class="card card-block w-auto display-block border-darl mb-3">
+                <div class="card-header"><h2>Post a Photo</h2></div>
+                <div class="card-block">
+                    <form action="/postPhoto" method="POST" enctype="multipart/form-data">
+                        <div class="form-row">
+                            <label for="uploadPhoto">Choose Photo</label>
+                            <input type="file" class="form-control-file" name="imageToUpload" id="uploadPhoto" placeholder="Photo" accept="image/*" required/>
+                        </div>
+                    <div class="form-row">
+                        <label for="caption">Write a caption for your image!</label>
+                        <input type="text" class="form-control" name="caption" id="caption" placeholder="Caption">
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Uplaod Photo"/>
+                    </form>
+                </div>
+            </div>
+        </div> -->
         
-
-
-
+        <div class="mx-auto" style="width: 750px; margin-top: 30px;">
+            <h1>Post a Photo!</h1>
+            <div class="container">
+                <form action="/postPhoto" method="POST" enctype="multipart/form-data">
+                    <div class="form-row">
+                        <label for="uploadPhoto">Choose Photo</label>
+                        <input type="file" class="form-control-file" style="margin-bottom: 20px;" name="imageToUpload" id="uploadPhoto" placeholder="Photo" accept="image/*" required/>
+                    </div>
+                    <div class="form-row">
+                        <label for="caption">Write a caption for your image!</label>
+                        <input type="text" class="form-control" style="margin-bottom: 20px;" name="caption" id="caption" placeholder="Caption">
+                    </div>
+                    <input type="submit" class="btn btn-primary" style="margin-bottom: 20px;" value="Uplaod Photo"/>
+                </form>
+            </div>
+            <a href="/home">Go Back</a>
+            
+        
+        </div>
+         
     </body>
 
 <!-- <body>

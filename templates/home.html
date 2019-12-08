@@ -13,7 +13,7 @@
     <body>
         <div class="container">
             <h1>Welcome Back {{username}} !</h1>
-            <nav class="navbar sticky-top navbar-dark bg-dark">
+            <nav class="navbar sticky-top navbar-dark bg-dark" style="margin-bottom: 30px;">
                 <a class="navbar-brand" href="home.html">Navigation</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" 
                     aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,9 +44,9 @@
             </nav>
             <h2>Newsfeed</h2>
             {% for image in images %}
-            <div class="mx-auto" style="width: 500px;">
+            <div class="mx-auto" style="width: 600px;">
                 <div class="card card-block w-auto display-block border-dark mb-3">
-                    <div class="card-header"><h5>{{username}}</h5></div>
+                    <div class="card-header"><h5>{{image.photoPoster}}</h5></div>
                     <img class="card-img" src="/images/{{image.photoPath}}" alt="Card image cap">
                     <div class="card-block">
                         <p class="card-text">{{image.caption}}</p>
