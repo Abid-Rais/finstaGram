@@ -19,16 +19,16 @@ conn = pymysql.connect(host='localhost',
                        cursorclass=pymysql.cursors.DictCursor)
 
 @app.route('/')
-def hello():
+def index():
     return render_template('index.html')
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
+# @app.route('/login')
+# def login():
+#     return render_template('login.html')
 
-@app.route('/register')
-def register():
-    return render_template('register.html')
+# @app.route('/register')
+# def register():
+#     return render_template('register.html')
 
 @app.route('/loginAuth', methods=['GET', 'POST'])
 def loginAuth():
@@ -73,7 +73,7 @@ def registerAuth():
         return render_template('index.html')
 
 
-@app.route('/home')
+@app.route('/home', methods=['GET'])
 def home():
     user = session['username']
     cursor = conn.cursor();
@@ -113,36 +113,53 @@ def postPhoto():
         return render_template("postPhoto.html", message=message)
     return render_template("postPhoto.html")
 
-@app.route('/likePhoto')
-def likePhoto(): 
-    query = 'UPDATE Photo SET like = like + 1 WHERE photoID = %s'
-    with conn.cursor() as cursor: 
-        cursor.execute(query, photoID)
-        conn.commit()
-    return render_template('home.html', username=user, images=data)
+# @app.route('/likePhoto', methods=['POST'])
+# def likePhoto(): 
+    
+#     query = 'UPDATE Photo SET like = like + 1 WHERE photoID = %s'
+#     with conn.cursor() as cursor: 
+#         cursor.execute(query, photoID)
+#         conn.commit()
+#     return render_template('home.html', username=user, images=data)
 
-@app.route('/commentPhoto')
-def commentPhoto(): 
-    pass
+# @app.route('/commentPhoto', methods=['POST'])
+# def commentPhoto(): 
+#     pass
 
-@app.route('/select_blogger')
-def select_blogger():
+# @app.route('/showComment', methods=['GET'])
+# def showComment(): 
+#     pass
+
+@app.route('/selectUser', methods=["GET"])
+def selectUser():
     cursor = conn.cursor();
     query = 'SELECT DISTINCT username FROM Person'
     cursor.execute(query)
-    data = cursor.fetchall()
+    user_data = cursor.fetchall()
     cursor.close()
-    return render_template('select_blogger.html', user_list=data)
+    return render_template('selectUser.html', user_list=user_data)
 
-@app.route('/show_posts', methods=["GET", "POST"])
-def show_posts():
-    poster = request.args['poster']
-    cursor = conn.cursor();
-    query = 'SELECT photoID, postingdate FROM photo WHERE photoPoster = %s ORDER BY postingdate DESC'
-    cursor.execute(query, poster)
+@app.route('/showPosts', methods=['GET','POST'])
+def showPosts():
+    print("IN HERE")
+    user = request.form["selected_person"]
+    print("User:",user)
+    cursor = conn.cursor()
+    query = 'SELECT * FROM photo WHERE photoPoster = %s ORDER BY postingdate DESC'
+    cursor.execute(query, user)
     data = cursor.fetchall()
     cursor.close()
-    return render_template('show_posts.html', poster_name=poster, posts=data)
+    return render_template('showPosts.html', username=user, images=data)
+
+# @app.route('/showPosts', methods=["GET", "POST"])
+# def showPosts():
+#     poster = request.args['poster']
+#     cursor = conn.cursor();
+#     query = 'SELECT photoID, postingdate FROM photo WHERE photoPoster = %s ORDER BY postingdate DESC'
+#     cursor.execute(query, poster)
+#     data = cursor.fetchall()
+#     cursor.close()
+#     return render_template('show_posts.html', poster_name=poster, posts=data)
 
 @app.route('/logout')
 def logout():
