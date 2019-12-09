@@ -10,7 +10,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
-        <h2>Newsfeed</h2>
+        <h2>{{username}}'s Photos</h2>
         {% for image in images %}
         <div class="mx-auto" style="width: 600px;">
             <div class="card card-block w-auto display-block border-dark mb-3">
@@ -49,5 +49,7 @@
             </div>
         </div>
         {% endfor %}
+        <a href="/home">Go Back</a>
     </body>
+    </html>
     

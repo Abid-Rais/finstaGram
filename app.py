@@ -104,9 +104,14 @@ def postPhoto():
         username = session['username']
         caption = request.form['caption']
 
-        query = "INSERT INTO Photo (photoPoster, photoPath, postingdate, caption) VALUES (%s, %s, %s, %s)"
+
+        visible = True
+        if request.form['allFollowers'] == "no":
+            visible = False
+
+        query = "INSERT INTO Photo (photoPoster, photoPath, postingdate, caption, allFollowers) VALUES (%s, %s, %s, %s, %s)"
         with conn.cursor() as cursor:
-            cursor.execute(query, (username, image_name, datetime.now(), caption))
+            cursor.execute(query, (username, image_name, datetime.now(), caption, visible))
             conn.commit()
             cursor.close()
         message = "Image has been successfully uploaded."
@@ -115,6 +120,7 @@ def postPhoto():
 
 # @app.route('/likePhoto', methods=['POST'])
 # def likePhoto(): 
+#     query = 'INSERT '
     
 #     query = 'UPDATE Photo SET like = like + 1 WHERE photoID = %s'
 #     with conn.cursor() as cursor: 
@@ -130,14 +136,14 @@ def postPhoto():
 # def showComment(): 
 #     pass
 
-@app.route('/selectUser', methods=["GET"])
-def selectUser():
-    cursor = conn.cursor();
-    query = 'SELECT DISTINCT username FROM Person'
-    cursor.execute(query)
-    user_data = cursor.fetchall()
-    cursor.close()
-    return render_template('selectUser.html', user_list=user_data)
+# @app.route('/selectUser', methods=["GET"])
+# def selectUser():
+#     cursor = conn.cursor();
+#     query = 'SELECT DISTINCT username FROM Person'
+#     cursor.execute(query)
+#     user_data = cursor.fetchall()
+#     cursor.close()
+#     return render_template('selectUser.html', user_list=user_data)
 
 @app.route('/showPosts', methods=['GET','POST'])
 def showPosts():
@@ -150,16 +156,6 @@ def showPosts():
     data = cursor.fetchall()
     cursor.close()
     return render_template('showPosts.html', username=user, images=data)
-
-# @app.route('/showPosts', methods=["GET", "POST"])
-# def showPosts():
-#     poster = request.args['poster']
-#     cursor = conn.cursor();
-#     query = 'SELECT photoID, postingdate FROM photo WHERE photoPoster = %s ORDER BY postingdate DESC'
-#     cursor.execute(query, poster)
-#     data = cursor.fetchall()
-#     cursor.close()
-#     return render_template('show_posts.html', poster_name=poster, posts=data)
 
 @app.route('/logout')
 def logout():

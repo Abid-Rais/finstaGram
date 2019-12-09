@@ -54,22 +54,6 @@
                     <div class="card-text text-right" style="margin-right: 5%;">{{image.postingdate}}</div>
                     <div class="card-group">
                         <div class="card">
-                            <div class="card-header text-center">
-                                {% if image.like %}
-                                    {{image.like}}
-                                {% else %}
-                                    0
-                                {% endif %}
-                                likes</div>
-                            <div class="card-body" style="margin-top:2%; margin-left:20%">
-                                <form action="/likePhoto"></form>
-                                <input type="hidden" id="photoID" name="photoID" value= {{image.photoID}} />
-                                <input type="checkbox" class="form-check-input" name="likeCheckbox" id="like" value="like_bool" >
-                                <input type="submit" class="btn btn-secondary" value="Like Photo" style="margin-left:20px;">
-                            </div>
-                        </div>
-
-                        <div class="card">
                             <div class="card-body">
                                 <form action="/commentPhoto"></form>
                                 <input type="text" class="form-control" name="comment" id="caption" placeholder="Comment">
@@ -77,10 +61,51 @@
                                 <input type="submit" class="btn btn-secondary" value="Comment" style="margin-left:30%;">
                             </div>
                         </div>
+                        <div class="card">
+                            <!-- Additional Info Button -->
+                            <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#AddInfoModal" style="margin-top: 20px; margin-left: 30px; margin-right: 30px;">Addition Info</button>
+                            <!-- View Comments Button -->
+                            <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#ViewCommentsModal" style="margin-top: 30px; margin-left: 30px; margin-right: 30px;">View Comments</button>
+                        </div>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
+
+        <!-- Additonal Info Modal -->
+        <div class="modal fade" id="AddInfoModal" tabindex="-1" role="dialog" aria-labelledby="AddInfoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Additonal Info</h3>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="model-body">
+                        <p>Posted by:  </br> 
+                        Time Posted: </br>
+                        Users Tagged: </br>
+                        Users Liked: </br>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="ViewCommentsModal" tabindex="-1" role="dialog" aria-labelledby="ViewCommentsLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Comments</h3>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="model-body">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </body>
 </html>
