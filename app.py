@@ -76,12 +76,22 @@ def registerAuth():
 @app.route('/home', methods=['GET'])
 def home():
     user = session['username']
-    cursor = conn.cursor();
+    cursor = conn.cursor()
     query = 'SELECT * FROM Photo ORDER BY postingDate DESC'
     cursor.execute(query)
     data = cursor.fetchall()
     cursor.close()
     return render_template('home.html', username=user, images=data)
+
+@app.route('/viewInfo/<photoID>', methods=['GET'])
+def viewInfo(photoID):
+    cursor = conn.cursor()
+    query = 'SELECT * FROM Photo WHERE photoID = %s'
+    cursor.execute(query, photoID)
+    data = cursor.fetchone()
+    print("data:",data)
+    cursor.close()
+    return render_template('viewInfo.html', image=data)
 
 @app.route("/images/<image_name>", methods=["GET"])
 def image(image_name):
@@ -89,9 +99,9 @@ def image(image_name):
     if os.path.isfile(image_location):
         return send_file(image_location, mimetype="image/jpg")
 
-@app.route("/upload", methods=['GET'])
-def upload():
-    return render_template("upload.html")
+# @app.route("/upload", methods=['GET'])
+# def upload():
+#     return render_template("upload.html")
 
 @app.route('/postPhoto', methods=['POST', 'GET'])
 def postPhoto():
@@ -103,7 +113,6 @@ def postPhoto():
 
         username = session['username']
         caption = request.form['caption']
-
 
         visible = True
         if request.form['allFollowers'] == "no":
@@ -136,20 +145,13 @@ def postPhoto():
 # def showComment(): 
 #     pass
 
-# @app.route('/selectUser', methods=["GET"])
-# def selectUser():
-#     cursor = conn.cursor();
-#     query = 'SELECT DISTINCT username FROM Person'
-#     cursor.execute(query)
-#     user_data = cursor.fetchall()
-#     cursor.close()
-#     return render_template('selectUser.html', user_list=user_data)
+@app.route('/selectUser')
+def selectUser():
+    return render_template('selectUser.html')
 
 @app.route('/showPosts', methods=['GET','POST'])
 def showPosts():
-    print("IN HERE")
     user = request.form["selected_person"]
-    print("User:",user)
     cursor = conn.cursor()
     query = 'SELECT * FROM photo WHERE photoPoster = %s ORDER BY postingdate DESC'
     cursor.execute(query, user)
