@@ -153,6 +153,29 @@ def commentPhoto():
     cursor.close()
     return render_template('home.html', username=username, images=data)
 
+@app.route('/likePhoto', methods=['GET', 'POST'])
+def likePhoto(): 
+    username = session['username']
+    photoID = request.form['photoID']
+    rating = (int(request.form['rating']) - 1 ) % 10 +1
+    cursor = conn.cursor()
+
+    try:
+        query = 'INSERT INTO Likes (username, photoID, liketime, rating) VALUES (%s, %s, %s, %s)'
+        cursor.execute(query, (username, photoID, datetime.now(), str(rating)))
+        conn.commit()
+    except: 
+        query = 'UPDATE Likes SET rating = %s WHERE username = %s and photoID = %s'
+        cursor.execute(query, (str(rating), username, photoID))
+        conn.commit()
+
+    query = 'SELECT * FROM Photo ORDER BY postingDate DESC'
+    cursor.execute(query)
+    data = cursor.fetchall()
+    cursor.close()
+    return render_template('home.html', username=username, images=data)
+
+
 @app.route('/selectUser')
 def selectUser():
     return render_template('selectUser.html')
@@ -204,7 +227,7 @@ def acceptFollow():
     cursor.execute(query, (follower, username))
     conn.commit()
 
-    query = 'SELECT DISTINCT username_followed FROM Follow WHERE username_followed = %s AND followstatus = 0'
+    query = 'SELECT DISTINCT username_follower FROM Follow WHERE username_followed = %s AND followstatus = 0'
     cursor.execute(query, username)
     user_data = cursor.fetchall()
     cursor.close()
@@ -219,7 +242,7 @@ def declineFollow():
     cursor.execute(query, (follower, username))
     conn.commit()
 
-    query = 'SELECT DISTINCT username_followed FROM Follow WHERE username_followed = %s AND followstatus = 0'
+    query = 'SELECT DISTINCT username_follower FROM Follow WHERE username_followed = %s AND followstatus = 0'
     cursor.execute(query, username)
     user_data = cursor.fetchall()
     cursor.close()

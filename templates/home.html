@@ -21,18 +21,35 @@
                         <div class="card-group">
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="/commentPhoto" method="POST">
+                                    <form action="/commentPhoto" method="POST" class="form-inline justify-content-center">
                                         <input type="text" class="form-control" name="comment" id="comment" placeholder="Comment">
                                         <input type="hidden" name="photoID" id="photoID" value="{{image.photoID}}">
                                         <input type="hidden" name="photoPoster" id="photoPoster" value="{{image.photoPoster}}">
-                                        <div class="form-row" style="margin-left:25%; margin-right: 10%; margin-top: 5%;">
+                                        <div class="form-row" style="margin-left:20%; margin-right: 20%; margin-top: 5%;">
                                             <input type="submit" class="btn btn-secondary" value="Comment">
-                                            <input type="button" class="btn btn-secondary" value="Additonal Info" style="margin-left: 20%;" onclick="relocate_addInfo( {{image.photoID}} )">  
                                         </div>
-                                    </form>                                    
+                                    </form>
                                 </div>
                             </div>
-                        </div>
+                            <div class="card" style="width: 5%;">
+                                <div class="card-body">
+                                    <form action="/likePhoto" method="POST" class="form-inline justify-content-center">
+                                        <div class="form-row">
+                                            <div class="col-4">
+                                                <input type="hidden" name="photoID" id="photoID" value="{{image.photoID}}">
+                                                <input type="number" class="form-control" name="rating" id="rating" placeholder="#">
+                                            </div>
+                                        </div>
+                                        <div class="form-row" style="margin-left:20%; margin-right: 20%; margin-top: 5%;">
+                                            <input type="submit" class="btn btn-secondary" value="Like">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>     
+                        </div>  
+                        <div class="card-footer">
+                            <input type="button" class="btn btn-link" value="Additonal Info" style="margin-left: 40%;" onclick="relocate_addInfo( {{image.photoID}} )"> 
+                        </div>                                  
                     </div>
                 </div>
                 {% endfor %}

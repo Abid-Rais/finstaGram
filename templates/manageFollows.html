@@ -9,7 +9,7 @@
         
         <h1>Manage Followers</h1>
         {% include "navbar.html" %}
-        <h3>Request User to Follow</h3>
+        <h3 style="margin-bottom: 2.5%;">Request User to Follow</h3>
         <div class="mx-auto" style="width: 600px; margin-bottom: 5%;">
           <div class="card">
             <form action="/requestFollow" method="POST">
@@ -25,22 +25,25 @@
           
         
         </form>
-        <h3>Follow Requests</h3>
+        <h3 style="margin-bottom: 2.5%;">Follow Requests</h3>
         {% for user in users %}
         <div class="mx-auto" style="width: 600px; margin-bottom: 5%;">
           <div class="card">
             <div class="card-body">
-              <h2 class="card-title" style="margin-bottom: 2.5%; text-align: center;">{{user.username_follower}}</h2>
-              <form action="/acceptFollow" method="POST">
-                <input type="hidden" name="follower" id="follower" value="{{user.username_follower}}">
-                <input type="submit" class="btn btn-success" action="/acceptFollow" value="Accept Follow Request" name="Accept">
+              <h2 class="card-title" style="margin-bottom: 3%; text-align: center;">{{user.username_follower}}</h2>
+              <div class="panel-footer row">
+                <div class="col-xs-6 text-left" style="margin-left: 15%;">
+                  <form action="/acceptFollow" method="POST">
+                    <input type="hidden" name="follower" id="follower" value="{{user.username_follower}}">
+                    <input type="submit" class="btn btn-success" action="/acceptFollow" value="Accept Follow Request" name="Accept">
+                  </form>
                 </div>
-              </form>
-              <form action="/declineFollow" method="POST">
-                <input type="hidden" name="follower" id="follower" value="{{user.username_follower}}">
-                <input type="submit" class="btn btn-danger" action="/declineFollow" value="Decline Follow Request" name="Decline">
+                <div class="col-xs-6 text-left" style="margin-left: 5%;">
+                  <form action="/declineFollow" method="POST">
+                    <input type="hidden" name="follower" id="follower" value="{{user.username_follower}}">
+                    <input type="submit" class="btn btn-danger" action="/declineFollow" value="Decline Follow Request" name="Decline">
+                  </form>
                 </div>
-              </form>
             </div>
           </div>
         </div>
