@@ -22,14 +22,6 @@ conn = pymysql.connect(host='localhost',
 def index():
     return render_template('index.html')
 
-# @app.route('/login')
-# def login():
-#     return render_template('login.html')
-
-# @app.route('/register')
-# def register():
-#     return render_template('register.html')
-
 @app.route('/loginAuth', methods=['GET', 'POST'])
 def loginAuth():
     username = request.form['username']
@@ -72,7 +64,6 @@ def registerAuth():
         cursor.close()
         return render_template('index.html')
 
-
 @app.route('/home', methods=['GET'])
 def home():
     username = session['username']
@@ -103,10 +94,6 @@ def image(image_name):
     image_location = os.path.join(IMAGES_DIR, image_name)
     if os.path.isfile(image_location):
         return send_file(image_location, mimetype="image/jpg")
-
-# @app.route("/upload", methods=['GET'])
-# def upload():
-#     return render_template("upload.html")
 
 @app.route('/postPhoto', methods=['POST', 'GET'])
 def postPhoto():
@@ -149,10 +136,6 @@ def commentPhoto():
     cursor.close()
     return render_template('home.html', username=username, images=data)
 
-# @app.route('/showComment', methods=['GET'])
-# def showComment(): 
-#     pass
-
 @app.route('/selectUser')
 def selectUser():
     return render_template('selectUser.html')
@@ -169,6 +152,62 @@ def showPosts():
     person_data = cursor.fetchone()
     cursor.close()
     return render_template('showPosts.html', person=person_data, images=images_data)
+
+@app.route('/manageFollows')
+def manageFollows(): 
+    username = session['username']
+    cursor = conn.cursor()
+    query = 'SELECT DISTINCT username_follower FROM Follow WHERE username_followed = %s AND followstatus = 0'
+    cursor.execute(query, username)
+    user_data = cursor.fetchall()
+    cursor.close()
+    return render_template('manageFollows.html', users=user_data)
+
+@app.route('/requestFollow', methods=['GET', 'POST'])
+def requestFollow(): 
+    username = session['username']
+    followed = request.form['followed']
+    cursor = conn.cursor()
+    query = 'INSERT INTO Follow (username_followed, username_follower, followstatus) VALUES (%s, %s, 0)'
+    cursor.execute(query, (followed, username))
+    conn.commit()
+    
+    query = 'SELECT DISTINCT username_followed FROM Follow WHERE username_followed = %s AND followstatus = 0'
+    cursor.execute(query, username)
+    user_data = cursor.fetchall()
+    cursor.close()
+    return render_template('manageFollows.html', users=user_data)
+
+@app.route('/acceptFollow', methods=['GET', 'POST'])
+def acceptFollow(): 
+    username = session['username']
+    follower = request.form['follower']
+    cursor = conn.cursor()
+    query = 'UPDATE Follow SET followstatus = 1 WHERE username_follower = %s AND username_followed = %s'
+    cursor.execute(query, (follower, username))
+    conn.commit()
+
+    query = 'SELECT DISTINCT username_followed FROM Follow WHERE username_followed = %s AND followstatus = 0'
+    cursor.execute(query, username)
+    user_data = cursor.fetchall()
+    cursor.close()
+    print(4)
+    return render_template('manageFollows.html', users=user_data)
+
+@app.route('/declineFollow', methods=['GET', 'POST'])
+def declineFollow():
+    username = session['username']
+    follower = request.form['follower']
+    cursor = conn.cursor()
+    query = 'DELETE FROM Follow WHERE username_follower = %s AND username_followed = %s'
+    cursor.execute(query, (follower, username))
+    conn.commit()
+
+    query = 'SELECT DISTINCT username_followed FROM Follow WHERE username_followed = %s AND followstatus = 0'
+    cursor.execute(query, username)
+    user_data = cursor.fetchall()
+    cursor.close()
+    return render_template('manageFollows.html', users=user_data)
 
 @app.route('/logout')
 def logout():
