@@ -77,17 +77,34 @@ def home():
 @app.route('/viewInfo/<photoID>', methods=['GET'])
 def viewInfo(photoID):
     cursor = conn.cursor()
+
+    # Fetch image_data
     query = 'SELECT * FROM Photo WHERE photoID = %s'
     cursor.execute(query, photoID)
     image_data = cursor.fetchone()
+
+    # Fetch person_data
     query = 'SELECT DISTINCT firstName, lastName FROM Person INNER JOIN Photo ON username = photoPoster WHERE username= %s'
     cursor.execute(query, image_data['photoPoster'])
     person_data = cursor.fetchone()
+
+    # Fetch comments_data
     query = 'SELECT DISTINCT commentStr, ts, username FROM comment INNER JOIN Photo WHERE comment.photoID = %s'
-    cursor.execute(query, image_data['photoID'])
+    cursor.execute(query, photoID)
     comment_data = cursor.fetchall()
+
+    # Fetch likes_data
+    query = 'SELECT username, rating FROM Likes WHERE photoID = %s'
+    cursor.execute(query, photoID)
+    likes_data = cursor.fetchall()
+
+    # Fetch tagged_data
+    query = 'SELECT username FROM Tagged WHERE photoID = %s AND tagstatus = 1'
+    cursor.execute(query, photoID)
+    tagged_data = cursor.fetchall()
+
     cursor.close()
-    return render_template('viewInfo.html', image=image_data, person=person_data, comments=comment_data)
+    return render_template('viewInfo.html', image=image_data, person=person_data, comments=comment_data, likes=likes_data, tagged=tagged_data)
 
 @app.route("/images/<image_name>", methods=["GET"])
 def image(image_name):
@@ -191,7 +208,6 @@ def acceptFollow():
     cursor.execute(query, username)
     user_data = cursor.fetchall()
     cursor.close()
-    print(4)
     return render_template('manageFollows.html', users=user_data)
 
 @app.route('/declineFollow', methods=['GET', 'POST'])

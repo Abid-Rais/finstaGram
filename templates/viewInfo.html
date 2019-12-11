@@ -16,17 +16,32 @@
                         <p>Name: {{person.firstName}} {{person.lastName}}</p>
                         <p>Timestamp: {{image.postingdate}}</p>
                         <p>Caption: {{image.caption}}</p>
-                        <p>Tags:</p>
-                        <p>Likes:</p>
                     </div>
                 </div>
-                <div class="card card-block w-auto display-block border-dark mb-3">
-                <div class="card-header"><h5>Comments</h5></div>
-                <div class="card-block" style="margin-left: 5%; margin-top: 2%; margin-right: 5%;">
-                    {% for comment in comments %}
-                    <p style="font-family: Trebuchet MS, sans-serif; font-size: 100%; text-align: left"><i>{{comment.ts}}</i></p>
-                    <p style="font-family: Trebuchet MS, sans-serif; font-size: 125%; text-align: center;">{{comment.username}}: {{comment.commentStr}}</p>
-                    {% endfor %}
+            </div>
+            <div class="container" style="width: 750px; margin: 0 auto; margin-top: 5%;">
+                <div class="card-group">
+                    <div class="card card-block w-auto display-block border-dark mb-3">
+                        <div class="card-header" style="text-align: center;"><h5>Likes</h5></div>
+                        <div class="card-body">
+
+
+                        </div>
+                    </div>
+                    <div class="card card-block w-auto display-block border-dark mb-3">
+                        <div class="card-header" style="text-align: center;"><h5>Comments</h5></div>
+                        <div class="card-body">
+
+
+                        </div>
+                    </div>
+                    <div class="card card-block w-auto display-block border-dark mb-3">
+                        <div class="card-header" style="text-align: center;"><h5>Tags</h5></div>
+                        <div class="card-body">
+
+
+                        </div>
+                    </div>
                 </div>
             </div>
             </div>
