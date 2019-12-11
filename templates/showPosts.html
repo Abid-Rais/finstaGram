@@ -2,54 +2,46 @@
 <html>
     <head>
         <title>HomePage</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% include "header.html" %}
     </head>
     <body>
-        <h2>{{username}}'s Photos</h2>
-        {% for image in images %}
-        <div class="mx-auto" style="width: 600px;">
-            <div class="card card-block w-auto display-block border-dark mb-3">
-                <div class="card-header"><h3>{{image.photoPoster}}</h3></div>
-                <img class="card-img" src="/images/{{image.photoPath}}" alt="Card image cap">
-                <div class="card-block">
-                    <p class="card-text" style="margin-left: 3%;">{{image.caption}}</p>
+        <div class="container" style="width: 900px; margin-top: 30px;">
+            <h1>Viewing {{person.username}}'s Profile</h1>
+            {% include "navbar.html" %} 
+            <div class="card" style="margin-bottom: 30px;">
+                <div class="card-header">
+                    <h3>{{person.firstName}} {{person.lastName}}</h3>
                 </div>
-                <div class="card-text text-right" style="margin-right: 5%;">{{image.postingdate}}</div>
-                <div class="card-group">
-                    <div class="card">
-                        <div class="card-header text-center">
-                            {% if image.like %}
-                                {{image.like}}
-                            {% else %}
-                                0
-                            {% endif %}
-                            likes</div>
-                        <div class="card-body" style="margin-top:2%; margin-left:20%">
-                            <form action="/likePhoto"></form>
-                            <input type="hidden" id="photoID" name="photoID" value= {{image.photoID}} />
-                            <input type="checkbox" class="form-check-input" name="likeCheckbox" id="like" value="like_bool" >
-                            <input type="submit" class="btn btn-secondary" value="Like Photo" style="margin-left:20px;">
-                        </div>
+                <div class="card-body">
+                    {{person.bio}}
+                </div>
+            </div>
+            {% for image in images %}
+            <div class="mx-auto" style="width: 600px; margin-bottom: 5%;">
+                <div class="card card-block w-auto display-block border-dark mb-3">
+                    <div class="card-header"><h3>{{image.photoPoster}}</h3></div>
+                    <img class="card-img" src="/images/{{image.filepath}}" alt="Card image cap">
+                    <div class="card-block">
+                        <p class="card-text" style="margin-left: 5%; margin-top: 3%; font-family: Trebuchet MS, sans-serif; font-size: 125%; ">{{image.caption}}</p>
                     </div>
-    
-                    <div class="card">
-                        <div class="card-body">
-                            <form action="/commentPhoto"></form>
-                            <input type="text" class="form-control" name="comment" id="caption" placeholder="Comment">
-                        </br>
-                            <input type="submit" class="btn btn-secondary" value="Comment" style="margin-left:30%;">
+                    <div class="card-text text-right" style="margin-right: 5%; margin-bottom: 2%; font-family: Trebuchet MS, sans-serif; font-size: 100%;"><i>{{image.postingdate}}</i></div>
+                    <div class="card-group">
+                        <div class="card">
+                            <div class="card-body">
+                                <form action="/commentPhoto"></form>
+                                <input type="text" class="form-control" name="comment" id="caption" placeholder="Comment">
+                            </br>
+                                <input type="submit" class="btn btn-secondary" value="Comment" style="margin-left:25%; margin-right: 10%;">
+                                
+                                <!-- Additional Info Button -->
+                                <input type="button" class="btn btn-secondary" value="Additonal Info" onclick="relocate_addInfo( {{image.photoID}} )">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-        <a href="/home">Go Back</a>
     </body>
     </html>
     

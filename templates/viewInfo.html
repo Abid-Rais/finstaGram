@@ -11,25 +11,24 @@
             <div class="container" style="width: 600px; margin: 0 auto;">
                 <div class="card card-block w-auto display-block border-dark mb-3">
                     <div class="card-header"><h3>{{image.photoPoster}}</h3></div>
-                    <img class="card-img" src="/images/{{image.photoPath}}" alt="Card image cap">
-                    <div class="card-block">
-                        <p class="card-text" style="margin-left: 3%;">{{image.caption}}</p>
-                    </div>
-                    <div class="card-text text-right" style="margin-right: 5%;">{{image.postingdate}}</div>
-                    <div class="card-group">
-                        <div class="card">
-                            <div class="card-body">
-                                <form action="/commentPhoto"></form>
-                                <input type="text" class="form-control" name="comment" id="caption" placeholder="Comment">
-                            </br>
-                                <input type="submit" class="btn btn-secondary" value="Comment" style="margin-left:25%; margin-right: 10%;">
-                                
-                                <!-- Additional Info Button -->
-                                <input type="button" class="btn btn-secondary" value="Additonal Info" onclick="relocate_addInfo( {{image.photoID}} )">
-                            </div>
-                        </div>
+                    <img class="card-img" src="/images/{{image.filepath}}" alt="Card image cap">
+                    <div class="card-block" style="font-family: Trebuchet MS, sans-serif; font-size: 125%; text-align: left; margin-left: 5%; margin-top:2%;">
+                        <p>Name: {{person.firstName}} {{person.lastName}}</p>
+                        <p>Timestamp: {{image.postingdate}}</p>
+                        <p>Caption: {{image.caption}}</p>
+                        <p>Tags:</p>
+                        <p>Likes:</p>
                     </div>
                 </div>
+                <div class="card card-block w-auto display-block border-dark mb-3">
+                <div class="card-header"><h5>Comments</h5></div>
+                <div class="card-block" style="margin-left: 5%; margin-top: 2%; margin-right: 5%;">
+                    {% for comment in comments %}
+                    <p style="font-family: Trebuchet MS, sans-serif; font-size: 100%; text-align: left"><i>{{comment.ts}}</i></p>
+                    <p style="font-family: Trebuchet MS, sans-serif; font-size: 125%; text-align: center;">{{comment.username}}: {{comment.commentStr}}</p>
+                    {% endfor %}
+                </div>
+            </div>
             </div>
         </div>
      </body>

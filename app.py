@@ -75,23 +75,28 @@ def registerAuth():
 
 @app.route('/home', methods=['GET'])
 def home():
-    user = session['username']
+    username = session['username']
     cursor = conn.cursor()
     query = 'SELECT * FROM Photo ORDER BY postingDate DESC'
     cursor.execute(query)
     data = cursor.fetchall()
     cursor.close()
-    return render_template('home.html', username=user, images=data)
+    return render_template('home.html', username=username, images=data)
 
 @app.route('/viewInfo/<photoID>', methods=['GET'])
 def viewInfo(photoID):
     cursor = conn.cursor()
     query = 'SELECT * FROM Photo WHERE photoID = %s'
     cursor.execute(query, photoID)
-    data = cursor.fetchone()
-    print("data:",data)
+    image_data = cursor.fetchone()
+    query = 'SELECT DISTINCT firstName, lastName FROM Person INNER JOIN Photo ON username = photoPoster WHERE username= %s'
+    cursor.execute(query, image_data['photoPoster'])
+    person_data = cursor.fetchone()
+    query = 'SELECT DISTINCT commentStr, ts, username FROM comment INNER JOIN Photo WHERE comment.photoID = %s'
+    cursor.execute(query, image_data['photoID'])
+    comment_data = cursor.fetchall()
     cursor.close()
-    return render_template('viewInfo.html', image=data)
+    return render_template('viewInfo.html', image=image_data, person=person_data, comments=comment_data)
 
 @app.route("/images/<image_name>", methods=["GET"])
 def image(image_name):
@@ -118,28 +123,31 @@ def postPhoto():
         if request.form['allFollowers'] == "no":
             visible = False
 
-        query = "INSERT INTO Photo (photoPoster, photoPath, postingdate, caption, allFollowers) VALUES (%s, %s, %s, %s, %s)"
-        with conn.cursor() as cursor:
-            cursor.execute(query, (username, image_name, datetime.now(), caption, visible))
-            conn.commit()
-            cursor.close()
+        query = "INSERT INTO Photo (photoPoster, filepath, postingdate, caption, allFollowers) VALUES (%s, %s, %s, %s, %s)"
+        cursor = conn.cursor()
+        cursor.execute(query, (username, image_name, datetime.now(), caption, visible))
+        conn.commit()
+        cursor.close()
         message = "Image has been successfully uploaded."
         return render_template("postPhoto.html", message=message)
     return render_template("postPhoto.html")
 
-# @app.route('/likePhoto', methods=['POST'])
-# def likePhoto(): 
-#     query = 'INSERT '
-    
-#     query = 'UPDATE Photo SET like = like + 1 WHERE photoID = %s'
-#     with conn.cursor() as cursor: 
-#         cursor.execute(query, photoID)
-#         conn.commit()
-#     return render_template('home.html', username=user, images=data)
+@app.route('/commentPhoto', methods=['GET','POST'])
+def commentPhoto(): 
+    comment = request.form['comment']
+    photoID = request.form['photoID']
+    username = session['username']
+    photoPoster = request.form['photoPoster']
+    query = "INSERT INTO comment (commentStr, ts, photoID, username, poster) VALUES (%s, %s, %s, %s, %s)"
+    cursor = conn.cursor()
+    cursor.execute(query, (comment, datetime.now(), photoID, username, photoPoster))
+    conn.commit()
 
-# @app.route('/commentPhoto', methods=['POST'])
-# def commentPhoto(): 
-#     pass
+    query = 'SELECT * FROM Photo ORDER BY postingDate DESC'
+    cursor.execute(query)
+    data = cursor.fetchall()
+    cursor.close()
+    return render_template('home.html', username=username, images=data)
 
 # @app.route('/showComment', methods=['GET'])
 # def showComment(): 
@@ -155,9 +163,12 @@ def showPosts():
     cursor = conn.cursor()
     query = 'SELECT * FROM photo WHERE photoPoster = %s ORDER BY postingdate DESC'
     cursor.execute(query, user)
-    data = cursor.fetchall()
+    images_data = cursor.fetchall()
+    query = 'SELECT * FROM Person WHERE username = %s'
+    cursor.execute(query, user)
+    person_data = cursor.fetchone()
     cursor.close()
-    return render_template('showPosts.html', username=user, images=data)
+    return render_template('showPosts.html', person=person_data, images=images_data)
 
 @app.route('/logout')
 def logout():

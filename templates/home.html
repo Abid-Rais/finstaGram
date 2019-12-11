@@ -5,30 +5,35 @@
         {% include "header.html" %}
     </head>
     <body>
-        <div class="container" style="width: 1200px; margin: 0 auto;">
+        <div class="container" style="width: 900px; margin-top: 30px;">
             <h1>Welcome Back {{username}}</h1>
             {% include "navbar.html" %} 
-            <h2>Newsfeed</h2>
+            <h2 style="margin-bottom: 2.5%;">Newsfeed</h2>
                 {% for image in images %}
-                <div class="mx-auto" style="width: 600px;">
+                <div class="mx-auto" style="width: 600px; margin-bottom: 5%;">
                     <div class="card card-block w-auto display-block border-dark mb-3">
                         <div class="card-header"><h3>{{image.photoPoster}}</h3></div>
-                        <img class="card-img" src="/images/{{image.photoPath}}" alt="Card image cap">
+                        <img class="card-img" src="/images/{{image.filepath}}" alt="Card image cap">
                         <div class="card-block">
-                            <p class="card-text" style="margin-left: 3%;">{{image.caption}}</p>
+                            <p class="card-text" style="margin-left: 3%; margin-top: 2%;">{{image.caption}}</p>
                         </div>
                         <div class="card-text text-right" style="margin-right: 5%;">{{image.postingdate}}</div>
                         <div class="card-group">
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="/commentPhoto"></form>
-                                    <input type="text" class="form-control" name="comment" id="caption" placeholder="Comment">
-                                </br>
-                                    <input type="submit" class="btn btn-secondary" value="Comment" style="margin-left:25%; margin-right: 10%;">
-                                    
+                                    <form action="/commentPhoto" method="POST">
+                                        <input type="text" class="form-control" name="comment" id="comment" placeholder="Comment">
+                                        <input type="hidden" name="photoID" id="photoID" value="{{image.photoID}}">
+                                        <input type="hidden" name="photoPoster" id="photoPoster" value="{{image.photoPoster}}">
+                                        <div class="form-row" style="margin-left:25%; margin-right: 10%; margin-top: 5%;">
+                                            <input type="submit" class="btn btn-secondary" value="Comment">
+                                            <input type="button" class="btn btn-secondary" value="Additonal Info" style="margin-left: 20%;" onclick="relocate_addInfo( {{image.photoID}} )">  
+                                        </div>
+                                    </form>
                                     <!-- Additional Info Button -->
-                                    <input type="button" class="btn btn-secondary" value="Additonal Info" onclick="relocate_addInfo( {{image.photoID}} )">
+                                    
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
