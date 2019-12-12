@@ -8,12 +8,12 @@
     <div class="mx-auto" style="width: 900px; margin-top:30px;">
         <h1>Whose Profile Would You Like to View?</h1>
         {% include "navbar.html" %}
-        <form action="/showPosts">
+        <form action="/showPosts" method="POST">
           <div class="form-group col-md-4" style="margin-top: 20px;">
               <label for="selectUser">Select A User</label>
-              <input type="text" name="selected_person" class="form-control" id="selectUser" placeholder="User">
+              <input type="text" class="form-control" name="selected_person" id="selected_person" placeholder="User">
           </div>
-          <input type="submit" class="btn btn-primary" style="margin-top: 20px;" value="Select User"/>
+          <input type="submit" class="btn btn-primary" style="margin-top: 20px;" value="Select User">
         </form>
     </div>
   </body>
