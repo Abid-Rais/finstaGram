@@ -64,12 +64,24 @@ def registerAuth():
         cursor.close()
         return render_template('index.html')
 
-@app.route('/home', methods=['GET'])
+@app.route('/home', methods=['GET']) 
 def home():
     username = session['username']
     cursor = conn.cursor()
-    query = 'SELECT * FROM Photo ORDER BY postingDate DESC'
-    cursor.execute(query)
+    query = "SELECT * FROM photo JOIN person ON ( username = photoPoster) \
+            WHERE photoID IN( \
+            SELECT DISTINCT photoID \
+            FROM photo \
+            WHERE photoPoster = %s OR photoID IN( \
+                                        SELECT DISTINCT photoID \
+                                        FROM photo JOIN follow ON (photoPoster = username_followed) \
+                                        WHERE (allFollowers = True AND username_follower = %s AND followstatus = True) \
+                                        OR photoID IN( SELECT DISTINCT photoID \
+                                                    FROM friendgroup AS F \
+                                                    JOIN belongto As B ON F.groupName = B.groupName AND F.groupOwner = B.owner_username \
+                                                    JOIN sharedwith AS S ON F.groupName = S.groupName AND F.groupOwner = S.groupOwner \
+                                                    WHERE member_username = %s)))"
+    cursor.execute(query, (username, username, username))
     data = cursor.fetchall()
     cursor.close()
     return render_template('home.html', username=username, images=data)
@@ -142,7 +154,7 @@ def commentPhoto():
     photoID = request.form['photoID']
     username = session['username']
     photoPoster = request.form['photoPoster']
-    query = "INSERT INTO comment (commentStr, ts, photoID, username, poster) VALUES (%s, %s, %s, %s, %s)"
+    query = "INSERT INTO Comment (commentStr, ts, photoID, username, poster) VALUES (%s, %s, %s, %s, %s)"
     cursor = conn.cursor()
     cursor.execute(query, (comment, datetime.now(), photoID, username, photoPoster))
     conn.commit()
@@ -160,11 +172,11 @@ def likePhoto():
     rating = (int(request.form['rating']) - 1 ) % 10 +1
     cursor = conn.cursor()
 
-    try:
+    try: #If a user likes an image for the first time
         query = 'INSERT INTO Likes (username, photoID, liketime, rating) VALUES (%s, %s, %s, %s)'
         cursor.execute(query, (username, photoID, datetime.now(), str(rating)))
         conn.commit()
-    except: 
+    except: #If a user likes an image again after the first time
         query = 'UPDATE Likes SET rating = %s WHERE username = %s and photoID = %s'
         cursor.execute(query, (str(rating), username, photoID))
         conn.commit()
@@ -174,7 +186,6 @@ def likePhoto():
     data = cursor.fetchall()
     cursor.close()
     return render_template('home.html', username=username, images=data)
-
 
 @app.route('/selectUser')
 def selectUser():
