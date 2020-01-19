@@ -1,4 +1,5 @@
 # finstaGram
+<<<<<<< HEAD
 
 ## Introduction
 finstaGram is a Web Application for uploading and sharing photos with other users. Users have the ability to comment, like, and tag other users in their photos. This photo blog application was initially a project for CS-UY 3083 Introduction to Databases. 
@@ -16,3 +17,5 @@ This project was created with the following:
 - Users are allowed to follow other users. Users can accept or decline follow requests that they have recieved. 
 - Newsfeed to display all photos and their respective additional information that users have access to seeing. 
 - Users are allowed to comment and like on other user's photos. 
+=======
+>>>>>>> 9d208d7b8dd5ee8f388a779f265d044a9b2f12af
